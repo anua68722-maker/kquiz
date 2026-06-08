@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-Quest | Виртуал цэцэрлэгт Солонгос хэл сурах апп</title>
+  
+  <!-- FontAwesome for Premium Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="landing-active">
+
+  <!-- Velorah® Cinematic Landing Page -->
+  <div id="velorah-landing">
+    <video class="video-bg" autoplay loop muted playsinline>
+      <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4" type="video/mp4">
+    </video>
+    <div class="overlay-tint"></div>
+    
+    <nav class="nav-bar">
+      <a href="#" class="logo">Velorah<sup class="text-xs">®</sup></a>
+      <div class="nav-links">
+        <a href="#" class="nav-link active">Home</a>
+        <a href="#" class="nav-link">Studio</a>
+        <a href="#" class="nav-link">About</a>
+        <a href="#" class="nav-link">Journal</a>
+        <a href="#" class="nav-link">Reach Us</a>
+      </div>
+      <button class="cta-btn-sm liquid-glass" onclick="app.beginJourney()">Begin Journey</button>
+    </nav>
+    
+    <section class="hero-section">
+      <h1 class="animate-fade-rise">
+        Where <em>dreams</em> rise <br><em>through the silence.</em>
+      </h1>
+      <p class="subtext animate-fade-rise-delay">
+        We're designing tools for deep thinkers, bold creators, and quiet rebels. Amid the chaos, we build digital spaces for sharp focus and inspired work.
+      </p>
+      <button class="cta-btn-lg liquid-glass animate-fade-rise-delay-2" onclick="app.beginJourney()">
+        Begin Journey
+      </button>
+    </section>
+  </div>
+
+  <!-- Top Global Header -->
+  <header>
+    <div class="brand" onclick="app.navigateTo('dashboard')">
+      <div class="logo-icon">K</div>
+      <h1>K-Quest</h1>
+    </div>
+    
+    <div class="user-status-bar" id="header-status" style="display: none;">
+      <div class="status-capsule xp-capsule" title="Нийт туршлага (XP)">
+        <i class="fa-solid fa-star"></i>
+        <span id="global-xp">0 XP</span>
+      </div>
+      <div class="status-capsule gold-capsule" title="Нийт Алт (Gold)">
+        <i class="fa-solid fa-coins"></i>
+        <span id="global-gold">0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main>
+    <div id="alert-container"></div>
+
+    <!-- VIEW 1: Character Selection Screen -->
+    <section id="character-selection-view" class="view-section active">
+      <h2>Тарих мод, цэцгээ сонгоорой!</h2>
+      <p class="subtitle">Солонгос хэлийг сурах тусам таны мод томорч, ягаан цэцэгс дэлгэрэх болно.</p>
+      
+      <div class="character-grid" id="characters-mount">
+        <!-- Dynanically generated via JS -->
+      </div>
+    </section>
+
+    <!-- VIEW 2: Dashboard View -->
+    <section id="dashboard-view" class="view-section">
+      <div class="dashboard-layout">
+        
+        <!-- Left Display: Interactive Pet Card -->
+        <div class="pet-showcase-panel">
+          <!-- Speech Bubble -->
+          <div class="speech-bubble-container">
+            <div class="speech-bubble" id="pet-speech-text">
+              Солонгос хэлний хичээлээ хийж виртуал цэцэрлэгээ цэцэглүүлээрэй!
+            </div>
+          </div>
+          
+          <!-- Large Pet SVG Container -->
+          <div class="main-pet-display" id="main-pet-mount">
+            <!-- Dynamic SVG inserted via JS -->
+          </div>
+          
+          <!-- Pet Inventory Quick Feed -->
+          <div style="text-align: center; width: 100%;">
+            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 4px;">Арчилгааны хэрэгслүүд:</div>
+            <div class="food-inventory-dock" id="food-inventory-mount" style="justify-content: center;">
+              <!-- Dynamic inventory items -->
+            </div>
+          </div>
+          
+          <!-- Core Interactions -->
+          <div class="pet-action-triggers">
+            <button class="action-btn feed-btn" onclick="app.playFeedAnimation()" title="Ургамал услах">
+              <i class="fa-solid fa-droplet"></i> Услах 💧
+            </button>
+            <button class="action-btn play-btn" onclick="app.playPetInteractive()" title="Хайр халамж үзүүлэх">
+              <i class="fa-solid fa-sun"></i> Халамжлах ☀️
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Display: Stats Widget & Topik Levels selector -->
+        <div class="sidebar-panel">
+          <!-- Pet Level & Care Stats -->
+          <div class="widget-card pet-stats-widget">
+            <h3><i class="fa-solid fa-spa" style="color: #10b981;"></i> Ургамлын Статус</h3>
+            
+            <div class="stat-row">
+              <div class="stat-label">
+                <span>Ургацын Түвшин: <strong id="pet-lvl-lbl">Lv. 1</strong></span>
+                <span class="stat-value" id="pet-xp-lbl">0 / 100 XP</span>
+              </div>
+              <div class="stat-bar-outer">
+                <div class="stat-bar-inner level-bar" id="pet-xp-fill" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="stat-row">
+              <div class="stat-label">
+                <span>Чийгшил (Hydration)</span>
+                <span class="stat-value" id="pet-hunger-lbl">80%</span>
+              </div>
+              <div class="stat-bar-outer">
+                <div class="stat-bar-inner hunger-bar" id="pet-hunger-fill" style="width: 80%"></div>
+              </div>
+            </div>
+
+            <div class="stat-row">
+              <div class="stat-label">
+                <span>Амьдралын эрч хүч (Vitality)</span>
+                <span class="stat-value" id="pet-happy-lbl">90%</span>
+              </div>
+              <div class="stat-bar-outer">
+                <div class="stat-bar-inner happiness-bar" id="pet-happy-fill" style="width: 90%"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TOPIK Levels selection map -->
+          <div class="widget-card topik-levels-widget">
+            <h3><i class="fa-solid fa-graduation-cap" style="color: var(--color-primary);"></i> TOPIK Түвшин сонгох</h3>
+            <div class="level-selector-grid">
+              <div class="level-badge-btn l1" onclick="app.startQuiz(1)">
+                <span class="lvl-num">1</span>
+                <span class="lvl-title">Анхан шат A</span>
+              </div>
+              <div class="level-badge-btn l2" onclick="app.startQuiz(2)">
+                <span class="lvl-num">2</span>
+                <span class="lvl-title">Анхан шат B</span>
+              </div>
+              <div class="level-badge-btn l3" onclick="app.startQuiz(3)">
+                <span class="lvl-num">3</span>
+                <span class="lvl-title">Дунд шат A</span>
+              </div>
+              <div class="level-badge-btn l4" onclick="app.startQuiz(4)">
+                <span class="lvl-num">4</span>
+                <span class="lvl-title">Дунд шат B</span>
+              </div>
+              <div class="level-badge-btn l5" onclick="app.startQuiz(5)">
+                <span class="lvl-num">5</span>
+                <span class="lvl-title">Гүнзгий шат A</span>
+              </div>
+              <div class="level-badge-btn l6" onclick="app.startQuiz(6)">
+                <span class="lvl-num">6</span>
+                <span class="lvl-title">Гүнзгий шат B</span>
+              </div>
+            </div>
+          </div>
+          
+          <button class="select-btn" onclick="app.changeCharacter()" style="background: rgba(16, 185, 129, 0.1); border: 1px dashed rgba(16, 185, 129, 0.3); color: #a7f3d0;">
+            <i class="fa-solid fa-seedling"></i> Ургамал солих
+          </button>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- VIEW 3: Vocabulary / Dictionary View -->
+    <section id="vocab-view" class="view-section">
+      <div class="vocab-header">
+        <div>
+          <h2>Топик үгийн сан</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px;">Дуудлагыг сонсохын тулд чанга яригч дээр дарна уу.</p>
+        </div>
+        
+        <div class="vocab-controls">
+          <div class="search-input-wrapper">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="vocab-search" placeholder="Үг хайх..." oninput="app.renderVocabulary()">
+          </div>
+          <select class="filter-select" id="vocab-filter" onchange="app.renderVocabulary()">
+            <option value="all">Бүх үгс</option>
+            <option value="Нэр үг">Нэр үгс</option>
+            <option value="Үйл үг">Үйл үгс</option>
+            <option value="Тэмдэг нэр">Тэмдэг нэрс</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- TOPIK level tabs -->
+      <div class="level-tabs" id="vocab-level-tabs">
+        <!-- Dynamic Level Tabs L1-L6 -->
+      </div>
+
+      <!-- Vocab list grid -->
+      <div class="vocab-grid" id="vocab-list-mount">
+        <!-- Dynamic cards -->
+      </div>
+    </section>
+
+    <!-- VIEW 4: Quiz Arena View -->
+    <section id="quiz-view" class="view-section">
+      <div class="quiz-container">
+        
+        <div class="quiz-header">
+          <div class="quiz-title">
+            <span class="logo-icon" id="quiz-badge-level" style="background: var(--lvl-1);">1</span>
+            <div>
+              <h2 id="quiz-level-title">TOPIK 1: Сорилт</h2>
+              <p style="color: var(--text-secondary); font-size: 0.85rem;" id="quiz-score-indicator">Асуулт 1 / 10</p>
+            </div>
+          </div>
+          <button class="vocab-action-btn" onclick="app.exitQuiz()" title="Гарах"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+        </div>
+
+        <!-- Tutor Pet comment box -->
+        <div class="quiz-pet-buddy">
+          <div class="quiz-pet-buddy-svg" id="quiz-pet-mount">
+            <!-- Buddy SVG -->
+          </div>
+          <div class="quiz-pet-speech" id="quiz-pet-speech">
+            "Анхаарлаа төвлөрүүлээд, зөв хариултыг олоорой! Би чамд итгэж байна."
+          </div>
+        </div>
+
+        <!-- Question core -->
+        <div class="quiz-question-box">
+          <div class="question-prompt" id="quiz-question-prompt">Дараах үгийн Монгол утгыг олно уу:</div>
+          <div class="question-word" id="quiz-question-word">사과</div>
+          <div class="question-hint" id="quiz-question-hint">(sagwa)</div>
+        </div>
+
+        <!-- Options list -->
+        <div class="quiz-options-list" id="quiz-options-mount">
+          <!-- Dynamic 4 Options buttons -->
+        </div>
+
+        <!-- Explanation box (Initially hidden) -->
+        <div class="quiz-explanation-box" id="quiz-explanation-box" style="display: none;">
+          <div class="explanation-header">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>Буруу хариуллаа! Зөв тайлбар:</span>
+          </div>
+          <div class="explanation-body" id="quiz-explanation-body">
+            <strong>사과 (sagwa)</strong> нь Монголоор <strong>Алим</strong> гэсэн утгатай. <br>
+            Жишээ өгүүлбэр: <em>사과가 맛있어요. (Алим амттай байна.)</em>
+          </div>
+        </div>
+
+        <div class="quiz-footer">
+          <button class="next-question-btn" id="quiz-next-btn" onclick="app.submitOrNextQuestion()" disabled>
+            Дараах <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIEW 5: Wordbook View (Mistakes & Favorites) -->
+    <section id="wordbook-view" class="view-section">
+      <div class="vocab-header">
+        <div>
+          <h2>Миний үгийн дэвтэр</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px;">Таны алдсан болон дуртай үгсийн цуглуулга.</p>
+        </div>
+      </div>
+
+      <div class="wordbook-tabs">
+        <button class="wordbook-tab-btn active" id="wb-tab-mistakes" onclick="app.switchWordbookTab('mistakes')">
+          <i class="fa-solid fa-circle-xmark"></i> Алдсан үгс (<span id="wb-count-mistakes">0</span>)
+        </button>
+        <button class="wordbook-tab-btn" id="wb-tab-favorites" onclick="app.switchWordbookTab('favorites')">
+          <i class="fa-solid fa-heart"></i> Дуртай үгс (<span id="wb-count-favorites">0</span>)
+        </button>
+      </div>
+
+      <!-- Action review mistakes button -->
+      <div id="mistake-action-container" style="margin-bottom: 24px; display: none; text-align: center;">
+        <button class="review-mistakes-btn" onclick="app.startMistakeQuiz()">
+          <i class="fa-solid fa-play"></i> Алдсан үгсээ дахин давтах сорилт эхлүүлэх
+        </button>
+      </div>
+
+      <!-- Wordbook Cards Grid -->
+      <div class="vocab-grid" id="wordbook-list-mount">
+        <!-- Dynamic cards -->
+      </div>
+      
+      <!-- Empty state container -->
+      <div class="empty-state" id="wordbook-empty" style="display: none;">
+        <i class="fa-solid fa-folder-open"></i>
+        <h3 id="wordbook-empty-title">Энд ямар нэгэн үг хараахан байхгүй байна</h3>
+        <p id="wordbook-empty-desc">Асуултанд алдаж хариулахад алдсан үгс энд цуглах болно.</p>
+      </div>
+    </section>
+
+    <!-- VIEW 6: Pet Shop View -->
+    <section id="shop-view" class="view-section">
+      <div class="shop-hero-card">
+        <div class="shop-title-desc">
+          <h2>Цэцэрлэгжилтийн дэлгүүр</h2>
+          <p style="color: #cbd5e1; font-size: 0.95rem; margin-top: 6px;">Асуултанд зөв хариулж цуглуулсан алтаараа мод, цэцэгтээ ус, шим тэжээл болон халамжийн хэрэгсэл аваарай!</p>
+        </div>
+        <div class="status-capsule gold-capsule" style="font-size: 1.2rem; padding: 10px 20px;">
+          <i class="fa-solid fa-coins"></i>
+          <span id="shop-gold-display">0</span>
+        </div>
+      </div>
+
+      <!-- Shop Grid -->
+      <div class="shop-grid" id="shop-grid-mount">
+        <!-- Dynamic shop cards -->
+      </div>
+    </section>
+
+    <!-- VIEW 7: Stats View -->
+    <section id="stats-view" class="view-section">
+      <div class="vocab-header">
+        <div>
+          <h2>Миний сурлагын амжилт</h2>
+          <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 4px;">Сургалтын статистик мэдээлэл болон явц.</p>
+        </div>
+      </div>
+
+      <!-- Stat Blocks -->
+      <div class="stats-summary-grid">
+        <div class="stat-box-card">
+          <div class="stat-icon-wrapper blue">
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <div class="stat-box-info">
+            <span class="num" id="stat-xp">0</span>
+            <span class="lbl">Нийт XP</span>
+          </div>
+        </div>
+        <div class="stat-box-card">
+          <div class="stat-icon-wrapper gold">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+          <div class="stat-box-info">
+            <span class="num" id="stat-correct-pct">0%</span>
+            <span class="lbl">Асуултын зөв хариулт</span>
+          </div>
+        </div>
+        <div class="stat-box-card">
+          <div class="stat-icon-wrapper rose">
+            <i class="fa-solid fa-fire"></i>
+          </div>
+          <div class="stat-box-info">
+            <span class="num" id="stat-streak">0 өдөр</span>
+            <span class="lbl">Идэвхтэй дараалсан өдөр</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Progress Map -->
+      <div class="stats-detailed-panel">
+        <h3><i class="fa-solid fa-chart-line" style="color: var(--color-primary); margin-right: 8px;"></i> Топик Түвшний дуусгалт</h3>
+        <div id="stats-progress-levels-mount">
+          <!-- Dynamic progress lines L1-L6 -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation Dock Bar -->
+  <footer class="nav-footer-dock" id="main-navigation-dock" style="display: none;">
+    <button class="dock-item active" onclick="app.navigateTo('dashboard')" id="nav-dashboard">
+      <i class="fa-solid fa-tree"></i>
+      <span>Цэцэрлэг</span>
+    </button>
+    <button class="dock-item" onclick="app.navigateTo('vocab')" id="nav-vocab">
+      <i class="fa-solid fa-book-open"></i>
+      <span>Үгийн сан</span>
+    </button>
+    <button class="dock-item" onclick="app.navigateTo('wordbook')" id="nav-wordbook">
+      <i class="fa-solid fa-bookmark"></i>
+      <span>Тэмдэглэл</span>
+    </button>
+    <button class="dock-item" onclick="app.navigateTo('shop')" id="nav-shop">
+      <i class="fa-solid fa-store"></i>
+      <span>Дэлгүүр</span>
+    </button>
+    <button class="dock-item" onclick="app.navigateTo('stats')" id="nav-stats">
+      <i class="fa-solid fa-chart-simple"></i>
+      <span>Статистик</span>
+    </button>
+  </footer>
+
+  <!-- Audio Synthesis Script (Web Speech Synthesis helper fallback for premium feel) -->
+  <script src="words.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
